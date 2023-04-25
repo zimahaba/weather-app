@@ -48,7 +48,8 @@ function App() {
 
       let week = [];
       for (let i = 1; i < 7; i++) {
-        week.push({name: '', 
+        currentDate.setDate(currentDate.getDate()+1);
+        week.push({name: currentDate.toLocaleDateString('en-US', {weekday: 'long'}), 
                   weatherCode: response.data.daily.weathercode[i],
                   max: response.data.daily.temperature_2m_max[i].toString().split('.')[0],
                   min: response.data.daily.temperature_2m_min[i].toString().split('.')[0]});
