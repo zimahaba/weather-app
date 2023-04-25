@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 const CloseButton = styled.button`
@@ -84,7 +84,7 @@ const SearchPlaces = props => {
   }
 
   return (
-    <>
+    <div style={{margin: '20px', display: 'flex', flexDirection: 'column', height: '100%'}}>
       <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '16px'}}>
         <CloseButton onClick={() => props.setShowToday(true)}>X</CloseButton>
       </div>
@@ -98,7 +98,7 @@ const SearchPlaces = props => {
           <LocationSubItem>{'(' + location.lat + '°E ' + location.lng + '°N)'}</LocationSubItem>
          </LocationDiv>)
       ))}
-    </>
+    </div>
   );
 }
 

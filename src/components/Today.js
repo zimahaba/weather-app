@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import cloudBgImage from '../assets/Cloud-background.png';
 import gpsImage from '../assets/Gps.png';
-import showerImage from '../assets/Shower.png';
 
 const TodayButtons = styled.div`
   display: flex;
@@ -11,6 +9,10 @@ const TodayButtons = styled.div`
 
 const SearchPlacesButton = styled.button`
   border: none;
+  cursor: pointer;
+  background-color: #6e707a;
+  color: #ffffff;
+  box-shadow: 0px 0px 1px 0.1px #000000;
 `;
 
 const Gps = styled.button`
@@ -22,6 +24,7 @@ const Gps = styled.button`
   width: 40px;
   height: 40px;
   background-color: #71727e;
+  box-shadow: 0px 0px 1px 0.1px #000000;
   cursor: pointer;
 `;
 
@@ -32,23 +35,26 @@ const Today = props => {
   }
 
   return (
-    <>
+    <div style={{margin: '20px', display: 'flex', flexDirection: 'column', height: '100%'}}>
       <TodayButtons>
-        <button onClick={searchPlacesHandler}>Search for places</button>
+        <SearchPlacesButton onClick={searchPlacesHandler}>Search for places</SearchPlacesButton>
         <Gps>
           <img style={{width: '28px'}} src={gpsImage}/>
         </Gps>
       </TodayButtons>
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', height: '100%'}}>
         <div>
-          <img src={showerImage}/>
+          <img src={props.todayIcon}/>
         </div>
-        <div><label style={{color: '#e7e7eb', fontSize: '80px'}}>{props.todayTemperature}°C</label></div>
-        <div>{props.todayWeather}</div>
-        <div>date</div>
-        <div>{props.location}</div>
+        <div>
+          <label style={{color: '#e7e7eb', fontSize: '80px'}}>{props.todayTemperature}</label>
+          <label style={{color: '#a09fb1', fontSize: '40px'}}>°C</label>
+        </div>
+        <div style={{color: '#a09fb1', fontSize: '30px'}}>{props.todayWeather}</div>
+        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>Today - {new Date().toDateString()}</label></div>
+        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>{props.location}</label></div>
       </div>
-    </>
+    </div>
   );
 }
 

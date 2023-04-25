@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import Today from './components/Today';
 import SearchPlaces from './components/SearchPlaces';
 
+import { getWeatherByCode, formatDateTime } from './Utils';
+import WeekDashboard from './Dashboard';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -20,146 +23,70 @@ const LeftColumn = styled.div`
   background-color: #1e213a;
 `;
 
-const Dashboard = styled.div`
-  background-color: #100e1d;
-  width: 80%;
-`;
-
-const getCurrentDateTime = () => {
-  const currentDatetime = new Date();
-  const year = currentDatetime.getFullYear();
-  const monthInt = parseInt(currentDatetime.getMonth())+1;
-  const month = monthInt < 10 ? '0' + monthInt : monthInt;
-  const day = currentDatetime.getDate < 10 ? '0' + currentDatetime.getDate() : currentDatetime.getDate();
-  const hour = currentDatetime.getHours() < 10 ? '0' + currentDatetime.getHours() : currentDatetime.getHours();
-  return year + '-' + month + '-' + day + 'T' + hour + ':00';
-}
-
 function App() {
 
   const [currentLocation, setCurrentLocation] = useState('Recife');
   const [todayTemperature, setTodayTemperature] = useState('');
   const [todayWeather, setTodayWeather] = useState('');
+  const [todayIcon, setTodayIcon] = useState(null);
   const [showToday, setShowToday] = useState(true);
+  const [weekInfo, setWeekInfo] = useState([])
 
-  useEffect(() => {
-    //axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=-8.05&longitude=-34.88&current_weather=true&start_date=2023-04-24&end_date=2023-04-24&timezone=America%2FSao_Paulo&hourly=relativehumidity_2m,precipitation'})
-    //axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=-8.05&longitude=-34.88&hourly=cloudcover&daily=rain_sum,showers_sum,snowfall_sum&current_weather=true&start_date=2023-04-24&end_date=2023-04-30&timezone=America%2FSao_Paulo'})
-    //axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=-22.90&longitude=-43.22&hourly=cloudcover&daily=rain_sum,showers_sum,snowfall_sum&current_weather=true&start_date=2023-04-24&end_date=2023-04-30&timezone=America%2FSao_Paulo'})
-    axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=-9.07&longitude=-35.24&hourly=rain,cloudcover&daily=precipitation_sum,rain_sum,showers_sum,snowfall_sum&current_weather=true&start_date=2023-04-24&end_date=2023-04-30&timezone=America%2FSao_Paulo'})
+  const fetchWeather = (latitude, longitude) => {
+    
+    const currentDate = new Date();
+    let lastDateTime = new Date();
+    lastDateTime.setDate(lastDateTime.getDate() + 6);
+    const [startDate] = formatDateTime(currentDate);
+    const [endDate] = formatDateTime(lastDateTime);
+    
+    axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=temperature_2m_max,temperature_2m_min,weathercode&current_weather=true&start_date=' + startDate + '&end_date=' + endDate + '&timezone=America%2FSao_Paulo'})
     .then(response => {
-      console.log(response);
-      //const currentDateTime = getCurrentDateTime();
-      //const currentDateTimeIndex = response.data.hourly.time.indexOf(currentDateTime);
-      //sunny - cloud < 50%
-      // cloudy - cloud >= 50%
-      // shower - showers < 1
-      // rain -  1 <= showers > 5
-      // heavy rain - 5 <= showers > 10
-      // thunderstorm showers >= 10
-      // snow
-      // sleet - rain + snow
-      const cloudcover = response.data.hourly.cloudcover.slice(0, 24);
-      const cloudcoverPercentage = cloudcover.reduce((sum, value) => sum + value, 0);
-      const showers = response.data.daily.showers_sum[0];
-      const snowfall = response.data.daily.snowfall_sum[0];
+      console.log(response.data);
       
-      let weather = 'Sunny';
-      if (cloudcoverPercentage >= 50) {
-        weather = 'Cloudy';
-      }
-      if (showers < 1) {
-        weather = 'Shower';
-      } else if (showers >= 1 && showers < 5) {
-        weather = 'Rain';
-      } else if (showers >= 5 && showers < 10) {
-        weather = 'Heavy Rain';
-      } else if (showers > 10) {
-        weather = 'Thunderstorm';
-      }
-      
-      if (snowfall > 1) {
-        weather = 'Snow';
-        if (showers >= 1) {
-          weather = 'Sleet';
-        }
+      let weather = getWeatherByCode(response.data.current_weather.weathercode);
+
+      let week = [];
+      for (let i = 1; i < 7; i++) {
+        week.push({name: '', 
+                  weatherCode: response.data.daily.weathercode[i],
+                  max: response.data.daily.temperature_2m_max[i].toString().split('.')[0],
+                  min: response.data.daily.temperature_2m_min[i].toString().split('.')[0]});
       }
 
-      setTodayWeather(weather);
-      setTodayTemperature(response.data.current_weather.temperature);
+      setTodayIcon(weather.image);
+      setTodayWeather(weather.description);
+      setTodayTemperature(response.data.current_weather.temperature.toString().split('.')[0]);
+      setWeekInfo(week);
+
     })
     .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    fetchWeather('-8.05', '-34.88');
   }, [])
 
   const locationClickHandler = (location) => {
     setCurrentLocation(location.name);
     setShowToday(true);
-    axios({method: 'get', url: 'https://api.open-meteo.com/v1/forecast?latitude=' + location.lat + '&longitude=' + location.lng + '&hourly=rain,cloudcover&daily=precipitation_sum,rain_sum,showers_sum,snowfall_sum&current_weather=true&start_date=2023-04-24&end_date=2023-04-30&timezone=America%2FSao_Paulo'})
-    .then(response => {
-      console.log(response);
-      //const currentDateTime = getCurrentDateTime();
-      //const currentDateTimeIndex = response.data.hourly.time.indexOf(currentDateTime);
-      //sunny - cloud < 50%
-      // cloudy - cloud >= 50%
-      // shower - showers < 1
-      // rain -  1 <= showers > 5
-      // heavy rain - 5 <= showers > 10
-      // thunderstorm showers >= 10
-      // snow
-      // sleet - rain + snow
-      const cloudcover = response.data.hourly.cloudcover.slice(0, 24);
-      const cloudcoverPercentage = cloudcover.reduce((sum, value) => sum + value, 0);
-      const showers = response.data.daily.showers_sum[0];
-      const snowfall = response.data.daily.snowfall_sum[0];
-      
-      let weather = 'Sunny';
-      if (cloudcoverPercentage >= 50) {
-        weather = 'Cloudy';
-      }
-      if (showers < 1) {
-        weather = 'Shower';
-      } else if (showers >= 1 && showers < 5) {
-        weather = 'Rain';
-      } else if (showers >= 5 && showers < 10) {
-        weather = 'Heavy Rain';
-      } else if (showers > 10) {
-        weather = 'Thunderstorm';
-      }
-      
-      if (snowfall > 1) {
-        weather = 'Snow';
-        if (showers >= 1) {
-          weather = 'Sleet';
-        }
-      }
-
-      setTodayWeather(weather);
-      setTodayTemperature(response.data.current_weather.temperature);
-    })
-    .catch(err => console.log(err));
+    fetchWeather(location.lat, location.lng)
   }
 
   return (
     <Wrapper>
       {showToday && 
         <LeftColumn>
-          <div style={{margin: '20px', display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Today todayTemperature={todayTemperature} todayWeather={todayWeather} location={currentLocation} setShowToday={setShowToday}/>
-          </div>
+            <Today todayIcon={todayIcon} todayTemperature={todayTemperature} todayWeather={todayWeather} location={currentLocation} setShowToday={setShowToday}/>
         </LeftColumn>
       }
       {!showToday &&
         <LeftColumn>
-          <div style={{margin: '20px', display: 'flex', flexDirection: 'column', height: '100%'}}>
             <SearchPlaces locationClickHandler={locationClickHandler} setShowToday={setShowToday}/>
-          </div>
         </LeftColumn>
       }
       
-      
-      <Dashboard>
-
-      </Dashboard>
+      <WeekDashboard weekInfo={weekInfo}/>      
     </Wrapper>
   );
 }
