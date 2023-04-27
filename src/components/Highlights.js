@@ -81,7 +81,7 @@ const Highlights = props => {
             <Label20>Wind Status</Label20>
             <Label60Top>{props.todayInfo.windSpeed}kph</Label60Top>
             <DivRow style={{margin: '20px', alignItems: 'center'}}>
-              <img style={{width: '30px', height: '30px', transform: 'rotate(' + props.todayInfo.windDirection+135 + 'deg)'}} src={directionImage}/>
+              <img style={{width: '30px', height: '30px', transform: 'rotate(' + (props.todayInfo.windDirection+135) + 'deg)'}} src={directionImage}/>
               <WindDirectionLabel>{getWindDirection(props.todayInfo.windDirection)}</WindDirectionLabel>
             </DivRow>
           </HighlightDiv>
