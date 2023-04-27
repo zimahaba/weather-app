@@ -1,6 +1,30 @@
-import { getWeatherByCode } from '../Utils';
-import { DivColumn, DivRow, GrayLabel, WhiteLabel } from './Styled';
-import {Wrapper, WeekWeather, WeekDay, TemperatureSelectionDiv, TemperatureButton, MaxMin, HighlightsWrapper, HighlightsLabel, HighlightDiv, Label20, Label60Top, Label60Bottom} from './DashboardsCss';
+import styled from 'styled-components';
+import Highlights from './Highlights';
+import WeekInfo from './WeekInfo';
+import { DivRow } from './Styled';
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #100e1d;
+  padding: 20px 160px;
+`;
+
+const TemperatureSelectionDiv = styled(DivRow)`
+  justify-content: flex-end;
+  margin: 10px 10px 30px 10px;
+`;
+
+const TemperatureButton = styled.button`
+  border: none;
+  border-radius: 100px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin-left: 8px;
+  background-color: ${props => (props.selected ? '#e7e7eb' : '#585676')};
+`;
 
 const Dashboard = props => {
 
@@ -10,51 +34,16 @@ const Dashboard = props => {
 
   return (
     <Wrapper>
+      
       <TemperatureSelectionDiv>
         <TemperatureButton selected={props.tempUnit === 'C'} onClick={() => tempUnitClickHandler('C')}>°C</TemperatureButton>
         <TemperatureButton selected={props.tempUnit === 'F'} onClick={() => tempUnitClickHandler('F')}>°F</TemperatureButton>
       </TemperatureSelectionDiv>
-      <WeekWeather>
-        {
-          props.weekInfo.map(day => (
-            ( <WeekDay>
-                <WhiteLabel>{day.name}</WhiteLabel>
-                <img style={{width: '50px'}} src={getWeatherByCode(day.weatherCode).image}/>
-                <MaxMin>
-                  <WhiteLabel>{day.max}°{props.tempUnit}</WhiteLabel>
-                  <GrayLabel>{day.min}°{props.tempUnit}</GrayLabel>
-                </MaxMin>
-              </WeekDay>)))
-        }
-      </WeekWeather>
 
-      <HighlightsWrapper>
-        <HighlightsLabel>Today's Highlights</HighlightsLabel>
-        <DivColumn>
-          <DivRow>
-            <HighlightDiv>
-              <Label20>Wind Status</Label20>
-              <Label60Top>{props.todayInfo.windSpeed}kph</Label60Top>
-              <Label20>{props.todayInfo.windDirection}</Label20>
-            </HighlightDiv>
-            <HighlightDiv>
-              <Label20>Humidity</Label20>
-              <Label60Top>{props.todayInfo.humidity}%</Label60Top>
-              <Label20>Progress Bar</Label20>
-            </HighlightDiv>
-          </DivRow>
-          <DivRow>
-            <HighlightDiv>
-              <Label20>Visibility</Label20>
-              <Label60Bottom>{props.todayInfo.visibility} km</Label60Bottom>
-            </HighlightDiv>
-            <HighlightDiv>
-              <Label20>Air Pressure</Label20>
-              <Label60Bottom>{props.todayInfo.airPressure} mb</Label60Bottom>
-            </HighlightDiv>
-          </DivRow>
-        </DivColumn>
-      </HighlightsWrapper>
+      <WeekInfo weekInfo={props.weekInfo} tempUnit={props.tempUnit}/>
+      
+      <Highlights todayInfo={props.todayInfo}/>
+      
     </Wrapper>
   );
 }

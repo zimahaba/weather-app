@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import gpsImage from '../assets/Gps.png';
+import { GrayLabel, WhiteLabel } from "./Styled";
 
 const TodayButtons = styled.div`
   display: flex;
@@ -28,6 +29,22 @@ const Gps = styled.button`
   cursor: pointer;
 `;
 
+const TempUnitLabel = styled(GrayLabel)`
+  font-size: 40px;
+`;
+
+const GrayLabel14 = styled(GrayLabel)`
+  font-size: 14px;
+`;
+
+const GrayLabel30 = styled(GrayLabel)`
+  font-size: 30px;
+`;
+
+const WhilteLabel80 = styled(WhiteLabel)`
+  font-size: 80px;
+`;
+
 const Today = props => {
 
   const searchPlacesHandler = () =>{
@@ -47,12 +64,12 @@ const Today = props => {
           <img src={props.todayInfo.icon}/>
         </div>
         <div>
-          <label style={{color: '#e7e7eb', fontSize: '80px'}}>{props.todayInfo.temperature}</label>
-          <label style={{color: '#a09fb1', fontSize: '40px'}}>°{props.tempUnit}</label>
+          <WhilteLabel80>{props.todayInfo.temperature}</WhilteLabel80>
+          <TempUnitLabel>°{props.tempUnit}</TempUnitLabel>
         </div>
-        <div style={{color: '#a09fb1', fontSize: '30px'}}>{props.todayInfo.weather}</div>
-        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>Today - {new Date().toDateString()}</label></div>
-        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>{props.location.name}</label></div>
+        <div><GrayLabel30>{props.todayInfo.weather}</GrayLabel30></div>
+        <div><GrayLabel14>Today - {new Date().toDateString()}</GrayLabel14></div>
+        <div><GrayLabel14>{props.location.name}</GrayLabel14></div>
       </div>
     </div>
   );
