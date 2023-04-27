@@ -65,14 +65,14 @@ const SearchPlaces = props => {
       axios({method: 'get', url: 'https://geocoding-api.open-meteo.com/v1/search?name=' + location + '&count=5&language=en&format=json'})
       .then(response => {
         setLocations(response.data.results.map(loc => {
-          let latitude = parseFloat(loc.latitude);
-          latitude = latitude <= -10 ? (latitude.toString().substring(0, 6)) : ( latitude >= 0 && latitude < 10 ? latitude.toString().substring(0, 4) : latitude.toString().substring(0, 5))
+          let lat = parseFloat(loc.latitude);
+          lat = lat <= -10 ? (lat.toString().substring(0, 6)) : ( lat >= 0 && lat < 10 ? lat.toString().substring(0, 4) : lat.toString().substring(0, 5))
           let lng = parseFloat(loc.longitude);
           lng = lng <= -10 ? lng.toString().substring(0, 6) : ( lng >= 0 && lng < 10 ? lng.toString().substring(0, 4) : lng.toString().substring(0, 5))
           
           const place = loc.admin1 !== undefined ? ', ' + loc.admin1.substring(0, 10) : '';
 
-          return ({name: loc.name.substring(0, 20), place: place, country: loc.country_code, lat: latitude, lng: lng});
+          return ({name: loc.name.substring(0, 20), place: place, country: loc.country_code, lat: lat, lng: lng});
         }));
       })
       .catch(err => console.log(err));

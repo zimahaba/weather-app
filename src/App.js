@@ -47,7 +47,7 @@ function buildUrl(latitude, longitude, startDate, endDate, temperatureUnit) {
 
 function App() {
 
-  const [currentLocation, setCurrentLocation] = useState({name: 'Recife', lat: '-8.05', lng:'-34.88'});
+  const [currentLocation, setCurrentLocation] = useState({});
   const [tempUnit, setTempUnit] = useState('C');
   const [todaySidebarInfo, setTodaySidebarInfo] = useState({});
   const [todayDashboardInfo, setTodayDashboardInfo] = useState({});
@@ -90,13 +90,18 @@ function App() {
     .catch(err => console.log(err));
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetchWeather('-8.05', '-34.88');
-  }, [])
+  }, [])*/
 
   const locationClickHandler = (location) => {
     setCurrentLocation(location);
     setShowToday(true);
+    fetchWeather(location.lat, location.lng, tempUnit);
+  }
+
+  const geocodingClickHandler = (location) => {
+    setCurrentLocation(location);
     fetchWeather(location.lat, location.lng, tempUnit);
   }
 
@@ -108,7 +113,7 @@ function App() {
     <Wrapper>
       {showToday && 
         <LeftColumn>
-            <Today todayInfo={todaySidebarInfo} location={currentLocation} setShowToday={setShowToday} tempUnit={tempUnit}/>
+            <Today todayInfo={todaySidebarInfo} location={currentLocation} setGeocodingLocation={geocodingClickHandler} setShowToday={setShowToday} tempUnit={tempUnit}/>
         </LeftColumn>
       }
       {!showToday &&
