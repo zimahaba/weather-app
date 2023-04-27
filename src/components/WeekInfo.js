@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { getWeatherByCode } from '../Utils';
 import { DivColumn, DivRow, GrayLabel, WhiteLabel } from "./Styled";
+import { useState } from "react";
 
 const WeekDay = styled(DivColumn)`
   justify-content: space-evenly;
@@ -18,13 +19,14 @@ const MaxMin = styled(DivRow)`
 `;
 
 const WeekInfo = props => {
+
   return (
     <DivRow>
       {
         props.weekInfo.map(day => (
           ( <WeekDay>
               <WhiteLabel>{day.name}</WhiteLabel>
-              <img style={{width: '50px'}} src={getWeatherByCode(day.weatherCode).image}/>
+              <img style={{width: '50px'}} src={getWeatherByCode(day.weatherCode).image} title={getWeatherByCode(day.weatherCode).description}/>
               <MaxMin>
                 <WhiteLabel>{day.max}°{props.tempUnit}</WhiteLabel>
                 <GrayLabel>{day.min}°{props.tempUnit}</GrayLabel>
