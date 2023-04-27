@@ -55,4 +55,15 @@ const formatDateTime = (datetime) => {
   return year + '-' + month + '-' + day;
 }
 
-export { formatDateTime, getWeatherByCode};
+const getWindDirection = (angle) => {
+  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
+  const angles = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5, 360];
+
+  const closest = angles.reduce((prev, curr) => {
+    return (Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev);
+  })
+  
+  return directions[angles.indexOf(closest)];
+}
+
+export { formatDateTime, getWeatherByCode, getWindDirection};

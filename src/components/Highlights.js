@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { DivRow, DivColumn, WhiteLabel } from "./Styled";
+import directionImage from '../assets/Direction.png';
+import { useEffect, useState } from "react";
+import { getWindDirection } from "../Utils";
 
 const HighlightsWrapper = styled(DivColumn)`
   margin-top: 60px;
@@ -62,7 +65,13 @@ const Progress = styled.span`
   display: block;
 `;
 
+const WindDirectionLabel = styled(WhiteLabel)`
+  margin-left: 10px;
+  font-weight: bold;
+`;
+
 const Highlights = props => {
+
   return (
     <HighlightsWrapper>
       <HighlightsLabel>Today's Highlights</HighlightsLabel>
@@ -71,7 +80,10 @@ const Highlights = props => {
           <HighlightDiv>
             <Label20>Wind Status</Label20>
             <Label60Top>{props.todayInfo.windSpeed}kph</Label60Top>
-            <Label20>{props.todayInfo.windDirection}</Label20>
+            <DivRow style={{margin: '20px', alignItems: 'center'}}>
+              <img style={{width: '30px', height: '30px', transform: 'rotate(' + props.todayInfo.windDirection+135 + 'deg)'}} src={directionImage}/>
+              <WindDirectionLabel>{getWindDirection(props.todayInfo.windDirection)}</WindDirectionLabel>
+            </DivRow>
           </HighlightDiv>
           <HighlightDiv>
             <Label20>Humidity</Label20>
