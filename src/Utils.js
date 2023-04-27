@@ -52,8 +52,7 @@ const formatDateTime = (datetime) => {
   const monthInt = parseInt(datetime.getMonth())+1;
   const month = monthInt < 10 ? '0' + monthInt : monthInt;
   const day = datetime.getDate() < 10 ? '0' + datetime.getDate() : datetime.getDate();
-  const hour = datetime.getHours() < 10 ? '0' + datetime.getHours() : datetime.getHours();
-  return [year + '-' + month + '-' + day, year + '-' + month + '-' + day + 'T' + hour + ':00'];
+  return year + '-' + month + '-' + day;
 }
 
 export { formatDateTime, getWeatherByCode};

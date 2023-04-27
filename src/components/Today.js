@@ -44,15 +44,15 @@ const Today = props => {
       </TodayButtons>
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', height: '100%'}}>
         <div>
-          <img src={props.todayIcon}/>
+          <img src={props.todayInfo.icon}/>
         </div>
         <div>
-          <label style={{color: '#e7e7eb', fontSize: '80px'}}>{props.todayTemperature}</label>
-          <label style={{color: '#a09fb1', fontSize: '40px'}}>°C</label>
+          <label style={{color: '#e7e7eb', fontSize: '80px'}}>{props.todayInfo.temperature}</label>
+          <label style={{color: '#a09fb1', fontSize: '40px'}}>°{props.tempUnit}</label>
         </div>
-        <div style={{color: '#a09fb1', fontSize: '30px'}}>{props.todayWeather}</div>
+        <div style={{color: '#a09fb1', fontSize: '30px'}}>{props.todayInfo.weather}</div>
         <div><label style={{color: '#a09fb1', fontSize: '14px'}}>Today - {new Date().toDateString()}</label></div>
-        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>{props.location}</label></div>
+        <div><label style={{color: '#a09fb1', fontSize: '14px'}}>{props.location.name}</label></div>
       </div>
     </div>
   );
