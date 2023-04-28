@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import './App.css';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Today from './components/Today';
 import SearchPlaces from './components/SearchPlaces';
 
@@ -89,10 +89,6 @@ function App() {
     })
     .catch(err => console.log(err));
   }
-
-  /*useEffect(() => {
-    fetchWeather('-8.05', '-34.88');
-  }, [])*/
 
   const locationClickHandler = (location) => {
     setCurrentLocation(location);

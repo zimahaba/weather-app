@@ -77,7 +77,9 @@ const Today = props => {
   }
 
   useEffect(() => {
-    geolocationClickHandler();
+    if (!props.todayInfo.weather) {
+      geolocationClickHandler();
+    }
   }, [])
 
   return (
