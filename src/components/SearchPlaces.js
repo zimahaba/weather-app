@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
+import { DivColumn } from "./Styled";
 
 const CloseButton = styled.button`
   background-color: #1e213a;
@@ -54,6 +55,11 @@ const LocationSubItem = styled.label`
   color: #a7a7a7;
 `;
 
+const Wrapper = styled(DivColumn)`
+  height: 100%;
+  margin: 20px;
+`;
+
 const SearchPlaces = props => {
 
   const [locations, setLocations] = useState([]);
@@ -84,9 +90,9 @@ const SearchPlaces = props => {
   }
 
   return (
-    <div style={{margin: '20px', display: 'flex', flexDirection: 'column', height: '100%'}}>
+    <Wrapper>
       <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '16px'}}>
-        <CloseButton onClick={() => props.setShowToday(true)}>X</CloseButton>
+        <CloseButton onClick={() => props.showPlaces(false)}>X</CloseButton>
       </div>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
         <LocationInput placeholder="Search location" onChange={(event) => setLocation(event.target.value)}></LocationInput>
@@ -98,7 +104,7 @@ const SearchPlaces = props => {
           <LocationSubItem>{'(' + location.lat + '°E ' + location.lng + '°N)'}</LocationSubItem>
          </LocationDiv>)
       ))}
-    </div>
+    </Wrapper>
   );
 }
 

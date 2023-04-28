@@ -56,7 +56,7 @@ const TodayInfo = styled(DivColumn)`
 const Today = props => {
 
   const searchPlacesHandler = () =>{
-    props.setShowToday(false);
+    props.showPlaces(true);
   }
 
   const geolocationClickHandler = () => {

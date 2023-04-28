@@ -24,6 +24,15 @@ const LeftColumn = styled(DivColumn)`
   background-color: #1e213a;
 `;
 
+const PlacesLeftColumn = styled(LeftColumn)`
+  height: 100%;
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  transition: transform 1s;
+  transform: translate(${props => props.translate}, 0)
+`;
+
 function buildUrl(latitude, longitude, startDate, endDate, temperatureUnit) {
   const dailyParams = 'temperature_2m_max,temperature_2m_min,weathercode';
   const hourlyParams = 'relativehumidity_2m,surface_pressure,visibility';
@@ -52,7 +61,7 @@ function App() {
   const [tempUnit, setTempUnit] = useState('C');
   const [todaySidebarInfo, setTodaySidebarInfo] = useState({});
   const [todayDashboardInfo, setTodayDashboardInfo] = useState({});
-  const [showToday, setShowToday] = useState(true);
+  const [placesTranslate, setPlacesTranslate] = useState('-100%');
   const [weekInfo, setWeekInfo] = useState([])
 
   const fetchWeather = (latitude, longitude, tempUnit) => {
@@ -93,7 +102,7 @@ function App() {
 
   const locationClickHandler = (location) => {
     setCurrentLocation(location);
-    setShowToday(true);
+    setPlacesTranslate('-100%')
     fetchWeather(location.lat, location.lng, tempUnit);
   }
 
@@ -106,18 +115,24 @@ function App() {
     fetchWeather(currentLocation.lat, currentLocation.lng, tempUnit);
   }
 
+  const placesTranslationHandler = (showPlaces) => {
+    if (showPlaces) {
+      setPlacesTranslate('0')
+    } else {
+      setPlacesTranslate('-100%')
+    }
+  }
+
   return (
     <Wrapper>
-      {showToday && 
-        <LeftColumn>
-            <Today todayInfo={todaySidebarInfo} location={currentLocation} setGeocodingLocation={geocodingClickHandler} setShowToday={setShowToday} tempUnit={tempUnit}/>
-        </LeftColumn>
-      }
-      {!showToday &&
-        <LeftColumn>
-            <SearchPlaces locationClickHandler={locationClickHandler} setShowToday={setShowToday}/>
-        </LeftColumn>
-      }
+      
+      <LeftColumn>
+          <Today todayInfo={todaySidebarInfo} location={currentLocation} setGeocodingLocation={geocodingClickHandler} showPlaces={placesTranslationHandler} tempUnit={tempUnit}/>
+      </LeftColumn>
+      
+      <PlacesLeftColumn translate={placesTranslate}>
+          <SearchPlaces locationClickHandler={locationClickHandler} showPlaces={placesTranslationHandler}/>
+      </PlacesLeftColumn>
       
       <Dashboard todayInfo={todayDashboardInfo} weekInfo={weekInfo} tempUnit={tempUnit} setTempUnit={tempUnitChangeHandler}/>      
     </Wrapper>
