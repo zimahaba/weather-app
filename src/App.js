@@ -7,6 +7,7 @@ import SearchPlaces from './components/SearchPlaces';
 
 import { getWeatherByCode, formatDateTime } from './Utils';
 import Dashboard from './components/Dashboard';
+import { DivColumn } from './components/Styled';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
   position: absolute;
 `;
 
-const LeftColumn = styled.div`
+const LeftColumn = styled(DivColumn)`
   width: 20%;
   min-width: 340px;
   background-color: #1e213a;
