@@ -93,7 +93,7 @@ const SearchPlaces = props => {
         <SearchButton onClick={searchButtonHandler}>Search</SearchButton>
       </div>
       {locations.map(location => (
-        (<LocationDiv onClick={() => locationClickHandler(location)}>
+        (<LocationDiv key={location.lat+'-'+location.lng} onClick={() => locationClickHandler(location)}>
           <LocationItem>{location.name + location.place + ' - ' + location.country}</LocationItem>
           <LocationSubItem>{'(' + location.lat + '°E ' + location.lng + '°N)'}</LocationSubItem>
          </LocationDiv>)

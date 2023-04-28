@@ -24,7 +24,7 @@ const WeekInfo = props => {
     <DivRow>
       {
         props.weekInfo.map(day => (
-          ( <WeekDay>
+          ( <WeekDay key={day.name}>
               <WhiteLabel>{day.name}</WhiteLabel>
               <img style={{width: '50px'}} src={getWeatherByCode(day.weatherCode).image} title={getWeatherByCode(day.weatherCode).description}/>
               <MaxMin>
